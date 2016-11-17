@@ -1,0 +1,17 @@
+- name: install curl
+  apt: name={{item}} state=present
+  with_items:
+    - curl
+
+- name: install elastic apt-key
+  apt_key: url=https://packages.elastic.co/GPG-KEY-elasticsearch state=present
+
+- name: install elastic repo
+  apt_repository: repo='deb http://packages.elastic.co/kibana/4.5/debian stable main' state=present
+
+- name: install kibana
+  apt: name={{item}} state=present
+  with_items:
+    - kibana
+
+

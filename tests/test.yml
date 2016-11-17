@@ -1,0 +1,15 @@
+- name: setup
+  hosts: all
+  roles: 
+    - kibana
+  tags: setup
+
+- name: test
+  hosts: all
+  tasks:
+    - wait_for: port=5601
+    - get_url:
+        url: "http://{{ansible_default_ipv4.address}}:5601"
+        dest: /tmp
+      delegate_to: localhost
+  tags: test

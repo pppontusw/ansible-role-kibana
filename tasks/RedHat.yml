@@ -1,0 +1,26 @@
+- name: install kibana repo
+  copy: src=kibana.repo
+        dest=/etc/yum.repos.d/
+        owner=root group=root mode=0644
+
+- name: import elastic key
+  rpm_key:
+    key: http://packages.elastic.co/GPG-KEY-elasticsearch
+    state: present
+
+- name: install kibana
+  yum: name={{item}} state=present
+  with_items:
+    - kibana
+
+- name: enable firewalld service
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+  tags: firewalld
+
+- name: configure firewalld
+  firewalld: "port=5601/tcp permanent=true state=enabled"
+  notify: restart firewalld
+  tags: firewalld
